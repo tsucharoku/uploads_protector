@@ -16,9 +16,9 @@ class UploadsProtectorDownload{
       $this->failed();
     }
 
-    $this->file = $this->getUploadsUrl(). '/' . $filePathFromUploadsDir;
-    
-    if ( !is_file($this->file)) {
+    $this->file = $this->getAbsoluteFilePath($filePathFromUploadsDir);
+
+    if (!$this->file ) {
       $this->failed();
     }
 
@@ -30,6 +30,22 @@ class UploadsProtectorDownload{
 
     readfile( $this->file );
     exit;
+  }
+
+  private function getAbsoluteFilePath($filePathFromUploadsDir){
+    $uploadsDir = $this->getUploadsUrl();
+    $absolutePath = realpath($uploadsDir . '/' . $filePathFromUploadsDir);
+
+    //Prevent directory traversal
+    if ($absolutePath === false || strpos($absolutePath, $uploadsDir) !== 0) {
+      return false;
+    }
+
+    if ( !is_file($absolutePath)) {
+      return false;
+    }
+
+    return $absolutePath;
   }
 
   private function getUploadsUrl(){

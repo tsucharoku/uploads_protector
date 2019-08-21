@@ -31,8 +31,8 @@ class UploadsProtector{
       if ( is_admin() ) {
           return;
       }
-      if(!empty($_GET['uploads-protector-download'])){
-        $fileUrl = $_GET['uploads-protector-download'];
+      if(!empty($_GET[$this->pluginSlug.'-download'])){
+        $fileUrl = $_GET[$this->pluginSlug.'-download'];
         require_once(dirname(__FILE__).'/download.php');
         new UploadsProtectorDownload($fileUrl);
       }
